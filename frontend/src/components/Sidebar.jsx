@@ -9,6 +9,8 @@ import {
     X,
     CarFront,
     Wallet,
+    Users,
+    ClipboardList,
     LogOut
 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
@@ -17,7 +19,9 @@ const enlaces = [
     { ruta: '/', icono: LayoutDashboard, texto: 'Panel de vehículos' },
     { ruta: '/entradas-salidas', icono: ArrowLeftRight, texto: 'Entradas y salidas' },
     { ruta: '/celdas', icono: Grid2X2, texto: 'Celdas' },
-    { ruta: '/pagos-mensuales', icono: Wallet, texto: 'Pagos mensuales' }
+    { ruta: '/pagos-mensuales', icono: Wallet, texto: 'Pagos mensuales' },
+    { ruta: '/usuarios', icono: Users, texto: 'Usuarios' },
+    { ruta: '/novedades', icono: ClipboardList, texto: 'Novedades' }
 ];
 
 export default function Sidebar() {
@@ -30,7 +34,9 @@ export default function Sidebar() {
     const colorTexto = '#cbd5e1';
     const enlacesVisibles = user?.role === 'ADMINISTRADOR'
         ? enlaces
-        : enlaces.filter(({ ruta }) => ruta !== '/pagos-mensuales' && ruta !== '/celdas');
+        : enlaces.filter(({ ruta }) =>
+            !['/pagos-mensuales', '/celdas', '/usuarios'].includes(ruta)
+        );
 
     async function cerrarSesion() {
         setError('');

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -40,8 +41,33 @@ public class Usuario {
     protected Usuario() {
     }
 
+    public Usuario(
+            String tipoDocumento,
+            String numeroDocumento,
+            String nombres,
+            String telefono,
+            String correo) {
+        this.tipoDocumento = tipoDocumento;
+        this.numeroDocumento = numeroDocumento;
+        this.nombres = nombres;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.activo = true;
+    }
+
+    @PrePersist
+    void asignarFechaCreacion() {
+        if (creadoEn == null) {
+            creadoEn = LocalDateTime.now();
+        }
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public String getTipoDocumento() {
+        return tipoDocumento;
     }
 
     public String getNombres() {
@@ -54,5 +80,34 @@ public class Usuario {
 
     public boolean isActivo() {
         return activo;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public LocalDateTime getCreadoEn() {
+        return creadoEn;
+    }
+
+    public void actualizarDatos(
+            String tipoDocumento,
+            String numeroDocumento,
+            String nombres,
+            String telefono,
+            String correo) {
+        this.tipoDocumento = tipoDocumento;
+        this.numeroDocumento = numeroDocumento;
+        this.nombres = nombres;
+        this.telefono = telefono;
+        this.correo = correo;
+    }
+
+    public void desactivar() {
+        this.activo = false;
     }
 }

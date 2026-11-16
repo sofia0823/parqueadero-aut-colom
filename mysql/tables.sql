@@ -77,6 +77,32 @@ CREATE TABLE IF NOT EXISTS estancias (
     INDEX ix_estancia_celda_salida (celda_id, salida)
 ) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS novedades (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    vehiculo_id BIGINT NULL,
+    estancia_id BIGINT NULL,
+    descripcion VARCHAR(1000) NOT NULL,
+    fecha_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    responsable VARCHAR(50) NOT NULL,
+
+    CONSTRAINT fk_novedad_vehiculo
+        FOREIGN KEY (vehiculo_id)
+        REFERENCES vehiculos(id),
+
+    CONSTRAINT fk_novedad_estancia
+        FOREIGN KEY (estancia_id)
+        REFERENCES estancias(id),
+
+    CONSTRAINT ck_novedad_una_relacion
+        CHECK (
+            (vehiculo_id IS NOT NULL AND estancia_id IS NULL)
+            OR (vehiculo_id IS NULL AND estancia_id IS NOT NULL)
+        ),
+
+    INDEX ix_novedad_vehiculo_fecha (vehiculo_id, fecha_hora),
+    INDEX ix_novedad_estancia_fecha (estancia_id, fecha_hora)
+) ENGINE = InnoDB;
+
 CREATE TABLE IF NOT EXISTS pagos (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     estancia_id BIGINT NOT NULL UNIQUE,

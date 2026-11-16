@@ -54,6 +54,15 @@ El backend sirve el frontend compilado y la API desde el mismo despliegue. En de
 - `POST /api/vehiculos` registra un vehículo.
 - `GET /api/health` verifica disponibilidad de la API.
 
+## Usuarios y novedades
+- `GET /api/usuarios` y `GET /api/usuarios/{id}` consultan usuarios (solo ADMINISTRADOR).
+- `POST /api/usuarios` y `PUT /api/usuarios/{id}` crean/actualizan usuarios (solo ADMINISTRADOR).
+- `DELETE /api/usuarios/{id}` realiza baja lógica (`activo=false`); no borra el registro ni su historial (solo ADMINISTRADOR).
+- `GET /api/novedades` y `GET /api/novedades/{id}` consultan novedades.
+- `POST /api/novedades` registra una novedad asociada a un vehículo o a una estancia.
+- ADMINISTRADOR y OPERARIO pueden consultar/registrar novedades. El responsable y la fecha/hora se obtienen del usuario autenticado y del servidor.
+- La autenticación sigue usando sesión de servidor, cookies y CSRF; no se migró a JWT. Las escrituras requieren el token CSRF del frontend.
+
 ## Pagos mensuales
 - `GET /api/mensualidades/membresias` lista las membresías.
 - `POST /api/mensualidades/membresias` inscribe un usuario existente (`usuarioId`, `fechaInicio`).
@@ -64,7 +73,7 @@ El backend sirve el frontend compilado y la API desde el mismo despliegue. En de
 - `GET /api/auth/csrf`, `POST /api/auth/login`, `GET /api/auth/session` y `POST /api/auth/logout` administran la sesión del personal. Las escrituras requieren el token CSRF enviado por el frontend.
 - Las cuentas del personal se almacenan aparte de `usuarios`; el bootstrap inicial guarda contraseñas BCrypt. El administrador gestiona mensualidades; el operario no tiene permiso para esa API.
 
-Pruebas automatizadas del backend: `cd backend` y `mvn test`. La suite (18 pruebas) incluye servicio/controlador y pruebas HTTP con H2 en memoria, además de la regla de cobro completo para una membresía vigente un solo día. El esquema y el backend también se validaron con MySQL 8.4 efímero, incluyendo login, roles, CSRF y cierre de sesión. Para probar manualmente contra el backend y MySQL locales, usar `docs/pruebas/mensualidades.http` en VS Code con una extensión cliente HTTP; primero inicia sesión como administrador y copia las cookies/token CSRF indicados en el archivo, luego reemplaza el ID y período por datos válidos. Los POST crean datos y no se deben ejecutar contra producción.
+Pruebas automatizadas del backend: `cd backend` y `mvn test`. La suite (21 pruebas: 8 de servicio, 3 de controlador y 10 de integración HTTP con H2) incluye pagos, autenticación por sesión/CSRF, roles, usuarios, novedades y el cobro completo para una membresía vigente un solo día. El esquema y el backend de pagos/autenticación también se validaron previamente con MySQL 8.4 efímero. Para probar manualmente pagos contra backend y MySQL locales, usar `docs/pruebas/mensualidades.http` en VS Code con una extensión cliente HTTP; primero inicia sesión como administrador y copia las cookies/token CSRF indicados en el archivo. Los POST crean datos y no se deben ejecutar contra producción.
 
 ## Repositorio GitHub
 https://github.com/sofia0823/parqueadero-aut-colom. El proyecto está publicado en la rama `v1.0`, que sigue a `origin/v1.0`. Se conservaron los archivos remotos no conflictivos y el historial; el README de la plantilla fue reemplazado por estas instrucciones del proyecto. Evitar `force push` y no compartir ni guardar tokens o contraseñas en el repositorio.
@@ -77,4 +86,4 @@ https://github.com/sofia0823/parqueadero-aut-colom. El proyecto está publicado 
 - Informe PDF: `docs/entrega_iteracion3.pdf` (cinco páginas; portada completada).
 - Informe integral PDF: `docs/informe_trabajo_completo.pdf` (cinco páginas; incluye resultados y limitaciones).
 
-La gestión de pagos mensuales y el flujo de entradas/salidas están implementados. La autenticación por sesión y RBAC protegen la gestión mensual y la creación de celdas; el CRUD de usuarios y RF-09 (novedades) siguen pendientes. Los diagramas son fuentes PlantUML editables; falta generar el proyecto nativo de StarUML si la entrega exige formato `.mdj`.
+La gestión de pagos mensuales, entradas/salidas, usuarios y novedades está implementada. RBAC limita usuarios/mensualidades al administrador y permite al operario registrar/consultar novedades y realizar operaciones. La matriz granular de los demás endpoints aún no está completa. Los diagramas son fuentes PlantUML editables; falta generar el proyecto nativo de StarUML si la entrega exige formato `.mdj`.

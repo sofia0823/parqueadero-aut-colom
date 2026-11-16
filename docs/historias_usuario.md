@@ -22,7 +22,7 @@ Como administrador, quiero crear y mantener celdas para conocer su disponibilida
 
 **HU-06 — Registrar novedad**  
 Como operario, quiero registrar una novedad asociada a un vehículo para dejar evidencia de incidentes u observaciones.  
-**Criterios:** vehículo o estancia asociada; descripción obligatoria; fecha/hora y responsable; consulta posterior.
+**Criterios:** asociar a exactamente un vehículo o una estancia; descripción obligatoria; fecha/hora generada por el servidor y responsable derivado de la cuenta autenticada (no se reciben esos valores del cliente); consulta posterior. Administrador y operario pueden crear y consultar; no se incluyen edición ni borrado.
 
 **HU-07 — Registrar pago mensual**  
 Como administrador, quiero registrar el pago de mensualidad para mantener control de cartera.  
@@ -35,6 +35,7 @@ Como administrador, quiero ver un resumen de vehículos y ocupación para conoce
 **HU-09 — Gestionar usuarios**  
 Como administrador, quiero registrar y actualizar los datos de usuarios para mantener la información de contacto al día.  
 **Criterios:** datos obligatorios validados; identificación única; datos actualizados reflejados en consultas.
+**Criterios de implementación:** tipo y número de identificación y nombres son obligatorios; teléfono/correo opcionales; lista y detalle incluyen el estado `activo`; la desactivación es lógica y conserva los registros referenciados. Solo el administrador puede crear, consultar, actualizar o desactivar usuarios.
 
 **HU-10 — Gestionar mensualistas**  
 Como administrador, quiero inscribir y finalizar la membresía mensual de un usuario para controlar quién genera períodos por pagar.  

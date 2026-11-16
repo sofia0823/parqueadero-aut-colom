@@ -8,10 +8,10 @@
 | RF-03 | Registrar entrada | El operario identifica el vehículo, registra fecha/hora de entrada y asigna una celda libre. |
 | RF-04 | Registrar salida | El operario registra fecha/hora de salida y libera la celda asociada. |
 | RF-05 | Evitar entradas duplicadas | Un vehículo no puede tener dos estancias abiertas simultáneas. |
-| RF-06 | Gestionar usuarios | Crear, consultar y actualizar usuarios/propietarios con datos de contacto. |
+| RF-06 | Gestionar usuarios | El administrador crea, consulta (lista y detalle), actualiza y desactiva usuarios. Tipo de identificación, número y nombres son obligatorios; teléfono y correo son opcionales; el número de identificación es único. Desactivar es lógico (`activo = false`), nunca elimina físicamente un usuario referido por historial o membresías. |
 | RF-07 | Gestionar celdas | Crear y consultar celdas; estados: disponible, ocupada, mantenimiento. |
 | RF-08 | Asignar celda disponible | Una entrada solo puede confirmarse si existe una celda disponible compatible. |
-| RF-09 | Registrar novedades | Asociar novedad, descripción, fecha/hora y responsable a una estancia o vehículo. |
+| RF-09 | Registrar novedades | Administrador y operario registran y consultan novedades con descripción obligatoria vinculadas a exactamente un vehículo o una estancia. La fecha/hora la genera el servidor y el responsable se deriva de la identidad autenticada; estos datos no se aceptan desde el cuerpo de la solicitud. No se incluyen operaciones de edición o borrado. |
 | RF-10 | Registrar pagos mensuales | Registrar en un flujo separado el usuario, período `YYYY-MM`, valor positivo ingresado manualmente, fecha del servidor, método y estado. Si la membresía cubre al menos un día del período, cobrar el valor mensual completo sin prorrateo ni redondeo. Una repetición idéntica no duplica el pago; si cambian valor o método para usuario/período, rechazarla como conflicto. El cobro por estancia conserva su flujo actual. |
 | RF-11 | Consultar historial | Consultar entradas/salidas por placa y rango de fechas. |
 | RF-12 | Validar integridad | Rechazar placas repetidas, campos obligatorios vacíos y operaciones incompatibles con el estado actual. |
@@ -38,10 +38,10 @@
 
 | Rol | Permisos previstos |
 |---|---|
-| Administrador | Inscribir/finalizar mensualistas; registrar y consultar pagos mensuales; gestionar usuarios y celdas; consultar reportes. |
-| Operario | Registrar entradas y salidas; consultar información necesaria para la operación diaria. Sin acceso a la gestión de mensualidades. |
+| Administrador | Inscribir/finalizar mensualistas; registrar y consultar pagos mensuales; gestionar usuarios y celdas; crear y consultar novedades. |
+| Operario | Registrar entradas y salidas; consultar información necesaria para la operación diaria; crear y consultar novedades. Sin acceso a la gestión de usuarios ni mensualidades. |
 
-La autenticación por sesión y la autorización del backend están implementadas para la API de mensualidades (solo administrador) y la creación de celdas (solo administrador); las demás rutas `/api/**` requieren sesión. La lectura operativa está permitida al operario. El CRUD de usuarios y reportes no está implementado, por lo que la matriz no afirma permisos para esas funciones. La interfaz también oculta rutas por rol, pero la protección efectiva reside en el backend.
+La autenticación por sesión y autorización del backend protegen las APIs: mensualidades, gestión de usuarios y creación de celdas son exclusivas del administrador; novedades requieren sesión y están habilitadas para ambos roles; las demás rutas `/api/**` requieren sesión. La interfaz oculta las rutas no autorizadas, pero la protección efectiva reside en el backend.
 
 ## Reglas de negocio
 - La placa se normaliza a mayúsculas y no se puede duplicar.
@@ -54,6 +54,8 @@ La autenticación por sesión y la autorización del backend están implementada
 - Cada pago mensual debe corresponder a una membresía que cubra el período; solo se permite un pago por usuario y período. Repetir la misma solicitud devuelve el pago existente; si cambian valor o método para la misma clave usuario/período, responder conflicto sin sobrescribir.
 - Se permiten pagos de períodos anteriores, pero no de períodos futuros. El vencimiento se calcula al consultar, sin reloj visual ni proceso periódico.
 - Las novedades deben indicar fecha, descripción y vehículo/estancia relacionada.
+- Cada novedad se relaciona con un único vehículo o una única estancia (nunca ambas ni ninguna); su fecha/hora es del servidor y el responsable es el usuario de personal autenticado.
+- La desactivación de un usuario conserva la fila y todas sus relaciones históricas.
 
 ## Alcance verificable de la Iteración 3
 

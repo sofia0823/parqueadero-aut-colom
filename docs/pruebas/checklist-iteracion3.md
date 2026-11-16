@@ -9,7 +9,7 @@ Avance actualizado: 2026-11-15.
 - [x] Revisar índices y `EXPLAIN`: pagos usan `uq_pago_mensual_usuario_periodo`; membresías usan índice por usuario/fecha.
 - [x] Ejecutar backend Spring Boot contra MySQL y probar endpoints HTTP reales.
 - [x] Probar idempotencia secuencial y concurrente contra MySQL.
-- [x] Ejecutar pruebas automatizadas backend/H2: 18 pruebas, 0 fallos, 0 errores.
+- [x] Ejecutar pruebas automatizadas backend/H2: 21 pruebas, 0 fallos, 0 errores.
 - [x] Probar validaciones HTTP: alta 201/repetida 200; pago 201/repetido 200 con el mismo ID; conflicto 409; período futuro y valor cero 400.
 - [x] Enviar 20 solicitudes concurrentes del mismo pago: una respuesta 201, 19 respuestas 200 y una sola fila en MySQL.
 - [x] Revisar índices: membresías por usuario/vigencia; pagos mensuales por usuario/período (único), período y fecha.
@@ -19,8 +19,9 @@ Avance actualizado: 2026-11-15.
 
 - [x] Separar cuentas del personal de los usuarios/clientes del parqueadero.
 - [x] Implementar inicio/cierre de sesión, sesiones de servidor, contraseñas BCrypt y protección CSRF.
-- [x] Aplicar autorización en el backend: administrador gestiona mensualidades y crea celdas; operario no accede a esos módulos.
+- [x] Aplicar autorización en el backend: administrador gestiona usuarios y mensualidades y crea celdas; administrador/operario consultan y registran novedades.
 - [x] Probar acceso anónimo, rol permitido/denegado, CSRF, login fallido y cierre de sesión contra MySQL 8.4.
+- [x] Probar por integración HTTP con H2 el CRUD administrativo de usuarios, la baja lógica y las novedades vinculadas a vehículo o estancia.
 - [x] Confirmar que las rutas `/api/**` requieren sesión excepto los endpoints públicos de salud/CSRF/login.
 
 ## 3. Entregables académicos
@@ -29,7 +30,8 @@ Avance actualizado: 2026-11-15.
 - [x] Crear fuentes editables de casos de uso, secuencia y componentes de las tres iteraciones (`docs/diagramas/*.puml`).
 - [x] Confirmar con la estudiante que las fuentes PlantUML editables son suficientes; no se requiere proyecto nativo `.mdj`.
 - [x] Crear mockup responsive de la gestión mensual en `docs/mockups/pagos-mensuales.html` (datos ficticios).
-- [x] Añadir pruebas automatizadas de servicio y de integración HTTP con H2 (18 pruebas pasan).
+- [x] Añadir pruebas automatizadas de servicio y de integración HTTP con H2 (21 pruebas pasan).
+- [x] Completar RF-06 (usuarios) y RF-09 (novedades), y documentar sus roles, validaciones y resultados de pruebas.
 - [x] Completar el plan resumido y registrar resultados en `docs/pruebas/plan-pruebas-iteracion3.md`.
 - [x] Incorporar estudiante e institución y actualizar el PDF de cinco páginas en `docs/entrega_iteracion3.pdf`.
 - [x] Completar los campos de portada con Sofia Gonzales Herrera, IU Digital y Esteban Montoya.
@@ -51,7 +53,7 @@ Avance actualizado: 2026-11-15.
 ## Riesgos y límites conocidos
 
 - No hay MySQL nativo disponible; el esquema y el backend, incluyendo autenticación/RBAC, se validaron con MySQL 8.4 en contenedores efímeros.
-- RBAC protege mensualidades y creación de celdas; otras rutas autenticadas no tienen una matriz granular por rol implementada.
+- RBAC limita usuarios/mensualidades al administrador y novedades a administrador/operario; otras rutas autenticadas aún no tienen una matriz granular completa por rol.
 - En despliegue, exigir HTTPS y `SESSION_COOKIE_SECURE=true`; no se validó una instalación de producción.
 - El README y las fuentes de plantilla originales fueron reemplazados en sus rutas conflictivas; el resto de archivos remotos se conservó.
-- RF-09 (novedades) aparece en requerimientos/diseño, pero no existe en el backend ni en el esquema desplegable; `docs/modelo_datos.sql` ahora lo deja explícito.
+- Las pruebas de usuarios/novedades se ejecutaron con H2; el esquema completo de estas funciones no se volvió a validar contra MySQL en esta etapa.

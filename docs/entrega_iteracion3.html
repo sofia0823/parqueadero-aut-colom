@@ -33,6 +33,9 @@
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
     .box { padding: 12px; border: 1px solid #dce5ed; border-radius: 8px; }
     .box h3 { margin-top: 0; }
+    .page:last-child table { margin: 6px 0 9px; font-size: 8pt; }
+    .page:last-child th, .page:last-child td { padding: 4px 6px; }
+    .page:last-child li { margin: 2px 0; }
     .footer { position: absolute; right: 21mm; bottom: 10mm; left: 21mm; display: flex; justify-content: space-between; color: #78889a; font-size: 8.5pt; }
     @media screen {
       .page { box-shadow: 0 5px 25px #17212f16; }
@@ -61,7 +64,7 @@
   <section class="page">
     <p class="kicker">01 · Contexto</p>
     <h2>Introducción</h2>
-    <p>Autos Colombia requiere apoyar la operación diaria del parqueadero y administrar los pagos de los clientes que adquieren una mensualidad. La Iteración 3 incorpora un flujo independiente para inscribir mensualistas, registrar pagos por usuario y período, y consultar estados. Se conserva el cobro vigente por estancia; no se reutiliza la tabla de pagos de salida para representar mensualidades.</p>
+    <p>Autos Colombia requiere apoyar la operación diaria del parqueadero y administrar los pagos de los clientes que adquieren una mensualidad. La Iteración 3 incorpora un flujo independiente para inscribir mensualistas, registrar pagos por usuario y período, y consultar estados. Se conserva el cobro vigente por estancia; no se reutiliza la tabla de pagos de salida para representar mensualidades. En el contexto general del sistema también se completaron el CRUD administrativo de usuarios y la gestión de novedades.</p>
     <p>El alcance funcional se documenta junto con sus criterios de aceptación, historias de usuario, diagramas, mockup y plan de pruebas. La validación técnica incluye una instancia desechable de MySQL 8.4 y la suite automatizada de backend con H2.</p>
     <h3>Objetivo</h3>
     <p>Definir y verificar un registro de pagos mensuales consistente, trazable e idempotente, asociado a un usuario existente y a un período en formato <code>YYYY-MM</code>.</p>
@@ -127,7 +130,7 @@
       <li>Si no existe, verifica que una membresía cubra el período, persiste el pago y devuelve 201.</li>
     </ol>
     <h3>Componentes</h3>
-    <p>La interfaz React consume controladores REST de Spring Boot. Los servicios de aplicación operan sobre puertos de repositorio implementados con Spring Data JPA y MySQL. La autenticación por sesión, BCrypt y CSRF protegen el acceso; el backend reserva mensualidades y creación de celdas al administrador, y permite al operario lectura operativa.</p>
+    <p>La interfaz React consume controladores REST de Spring Boot. Los servicios de aplicación operan sobre puertos de repositorio implementados con Spring Data JPA y MySQL. La autenticación por sesión, BCrypt y CSRF protegen el acceso; el administrador gestiona usuarios y mensualidades. Administrador y operario pueden consultar/registrar novedades; el responsable y la fecha/hora de cada novedad los determina el servidor.</p>
     <h3>Mockup de pagos mensuales</h3>
     <p>La propuesta responsive presenta resumen del período, formulario de pago y tabla de estados. Utiliza datos ficticios y es una maqueta estática, no una pantalla conectada al backend.</p>
     <div class="callout"><strong>Fuentes editables:</strong> docs/diagramas/casos_uso_iteraciones.puml, secuencia_iteraciones.puml y componentes_iteraciones.puml; maqueta: docs/mockups/pagos-mensuales.html.</div>
@@ -150,7 +153,8 @@
         <tr><td>Login, roles, CSRF y logout</td><td>401/403 para accesos no permitidos; 200/204 para acciones autorizadas</td><td>Aprobada con MySQL 8.4</td></tr>
         <tr><td>Hash de credenciales</td><td>Contraseña persistida con BCrypt; credencial inválida rechazada</td><td>Aprobada</td></tr>
         <tr><td>Membresía vigente un día</td><td>Conservar el valor mensual completo, sin prorrateo</td><td>Aprobada en prueba automatizada con H2</td></tr>
-        <tr><td>Suite automatizada</td><td>0 fallos ni errores</td><td>18 pruebas aprobadas</td></tr>
+        <tr><td>Usuarios y novedades</td><td>Roles, baja lógica y novedad con datos del servidor</td><td>Aprobada en integración HTTP con H2</td></tr>
+        <tr><td>Suite automatizada</td><td>0 fallos ni errores</td><td>21 aprobadas: 8 servicio, 3 controlador y 10 integración HTTP</td></tr>
       </tbody>
     </table>
     <p>La prueba de motor se ejecutó en MySQL 8.4 efímero. `EXPLAIN` mostró el uso del índice único usuario/período para localizar pagos. No se particionó: el volumen académico es reducido y la partición aumentaría complejidad sin beneficio medido.</p>
@@ -159,7 +163,7 @@
       <li>La gestión de pagos mensuales funciona como flujo separado y conserva el cobro por estancia.</li>
       <li>La clave única y el bloqueo transaccional evitan la duplicación del pago ante repetición y concurrencia.</li>
       <li>Las validaciones y restricciones del backend/MySQL protegen los datos de pago probados.</li>
-      <li>La autenticación/RBAC ya protege las rutas verificadas; antes de producción se debe configurar HTTPS y publicar el código actualizado en un repositorio accesible.</li>
+      <li>La autenticación/RBAC protege las rutas verificadas; usuarios/novedades tienen pruebas HTTP con H2 y la baja de usuarios es lógica. Antes de producción se debe configurar HTTPS y ejecutar pruebas en el entorno de despliegue.</li>
     </ul>
     <div class="callout"><strong>Repositorio:</strong> github.com/sofia0823/parqueadero-aut-colom (rama pública v1.0). El código y los entregables están publicados; se conservaron el historial y los archivos remotos no conflictivos.</div>
     <p class="small">Plan detallado y evidencia resumida: docs/pruebas/plan-pruebas-iteracion3.md y docs/pruebas/checklist-iteracion3.md.</p>

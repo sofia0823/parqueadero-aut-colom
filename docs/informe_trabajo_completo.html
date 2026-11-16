@@ -56,7 +56,7 @@
   <section class="page">
     <p class="kicker">01 · Alcance y entregables</p>
     <h2>Resumen ejecutivo</h2>
-    <p>El trabajo completa el análisis y la validación técnica de la gestión de pagos mensuales para Autos Colombia. El flujo permite asociar una mensualidad con un usuario y un período, controlar membresías, registrar pagos y consultar estados. Esta funcionalidad permanece separada del cobro de las estancias para preservar el comportamiento existente de entradas y salidas.</p>
+    <p>El trabajo completa el análisis y la validación técnica de la gestión de pagos mensuales para Autos Colombia, además del CRUD de usuarios y la gestión de novedades. Los pagos permiten asociar una mensualidad con un usuario y un período, controlar membresías, registrar pagos y consultar estados. Esta funcionalidad permanece separada del cobro de las estancias para preservar el comportamiento existente de entradas y salidas.</p>
     <h3>Entregables preparados</h3>
     <ul>
       <li>Requerimientos funcionales/no funcionales y reglas del negocio para pagos mensuales.</li>
@@ -66,11 +66,12 @@
       <li>Plan de pruebas resumido y checklist de cierre de Iteración 3.</li>
       <li>Entrega académica en PDF y este informe integral en PDF.</li>
       <li>Backend de pagos mensuales, membresías, autenticación/sesiones y control de acceso por roles, con pruebas automatizadas.</li>
+      <li>CRUD de usuarios restringido al administrador, con baja lógica; registro/consulta de novedades asociadas a vehículo o estancia.</li>
     </ul>
     <div class="callout"><strong>Criterio de continuidad:</strong> el pago mensual no reutiliza la tabla del pago por estancia. La clave lógica usuario/período evita pagos duplicados; la idempotencia se verifica en el servicio y en solicitudes HTTP concurrentes.</div>
     <h3>Componentes técnicos</h3>
     <div class="two-col">
-      <div class="box"><h3>Backend</h3><p>Java 21, Spring Boot, Spring Data JPA y API REST. Servicios, controladores, repositorios y validaciones gestionan membresías y pagos.</p></div>
+      <div class="box"><h3>Backend</h3><p>Java 21, Spring Boot, Spring Data JPA y API REST. Servicios, controladores, repositorios y validaciones gestionan usuarios, novedades, membresías y pagos.</p></div>
       <div class="box"><h3>Interfaz y datos</h3><p>React/Vite consume la API. MySQL almacena usuarios, membresías, pagos mensuales y pagos por estancia con integridad referencial e índices.</p></div>
     </div>
     <div class="footer"><span>Autos Colombia · Informe integral</span><span>2</span></div>
@@ -95,6 +96,7 @@
       <tbody>
         <tr><td>Sesión y credenciales</td><td>Login inválido 401; contraseñas almacenadas con BCrypt.</td></tr>
         <tr><td>Permisos</td><td>Administrador puede consultar mensualidades; operario recibe 403. El operario puede consultar vehículos (200).</td></tr>
+        <tr><td>Usuarios y novedades</td><td>Solo administrador gestiona usuarios; administrador/operario consultan y registran novedades.</td></tr>
         <tr><td>CSRF y logout</td><td>Escritura sin token CSRF rechazada (403); logout 204 e invalida la sesión.</td></tr>
         <tr><td>Sesión anónima</td><td>Consulta mensualidades sin sesión rechazada (401).</td></tr>
       </tbody>
@@ -107,7 +109,7 @@
     <p class="kicker">03 · Verificación</p>
     <h2>Resultados de las pruebas</h2>
     <h3>Pruebas automatizadas</h3>
-    <p><strong><code>mvn test</code>:</strong> 18 pruebas aprobadas, 0 fallos y 0 errores: 8 de servicio, 3 de controlador y 7 de integración HTTP con H2. Se incluye el caso de membresía vigente un día: el valor mensual manual de $125.000 se conserva completo, sin prorrateo.</p>
+    <p><strong><code>mvn test</code>:</strong> 21 pruebas aprobadas, 0 fallos y 0 errores: 8 de servicio, 3 de controlador y 10 de integración HTTP con H2. Se cubren usuarios, novedades, sesión/CSRF, roles y pagos; se incluye el caso de membresía vigente un día, donde el valor mensual manual de $125.000 se conserva completo, sin prorrateo.</p>
     <h3>MySQL 8.4 y API HTTP</h3>
     <ul>
       <li>Esquema creado y aplicación conectada a MySQL 8.4.13 en un entorno efímero.</li>
@@ -117,7 +119,7 @@
       <li>Login, roles, CSRF, logout, sesión invalidada y BCrypt verificados con MySQL.</li>
       <li>No se particionaron las tablas: el volumen académico no justifica su complejidad adicional.</li>
     </ul>
-    <div class="callout warning"><strong>Alcance de evidencia:</strong> las pruebas MySQL se realizaron con un contenedor local desechable y datos sintéticos. No constituyen certificación del entorno productivo. El build de frontend fue validado previamente; no se modificó frontend en esta última actualización.</div>
+    <div class="callout warning"><strong>Alcance de evidencia:</strong> las pruebas MySQL se realizaron con un contenedor local desechable y datos sintéticos; las nuevas pruebas de usuarios/novedades usaron H2. No constituyen certificación del entorno productivo. El build de frontend actualizado pasó correctamente.</div>
     <h3>Fuentes del proyecto</h3>
     <p>Los requisitos e historias están en <code>docs/requerimientos.md</code> y <code>docs/historias_usuario.md</code>. El plan/checklist están en <code>docs/pruebas/</code>; los diagramas PlantUML en <code>docs/diagramas/</code>; el mockup en <code>docs/mockups/pagos-mensuales.html</code>. El documento académico es <code>docs/entrega_iteracion3.pdf</code>.</p>
     <div class="footer"><span>Autos Colombia · Informe integral</span><span>4</span></div>
@@ -129,6 +131,7 @@
     <ul>
       <li>La Iteración 3 tiene una regla económica inequívoca y documentada: mes completo al existir al menos un día de vigencia.</li>
       <li>Los pagos mensuales se asocian a usuario/período; validaciones, restricciones e idempotencia protegen su integridad.</li>
+      <li>El CRUD de usuarios y la gestión de novedades están implementados; la baja de usuario conserva los registros relacionados y las novedades usan responsable/fecha del servidor.</li>
       <li>Las pruebas de servicio, HTTP, MySQL e idempotencia concurrente respaldan los resultados reportados.</li>
       <li>Los diagramas editables se entregan como fuentes PlantUML, y el mockup HTML es una maqueta estática.</li>
     </ul>
@@ -136,10 +139,9 @@
     <ul>
       <li>El repositorio proporcionado es <code>sofia0823/parqueadero-aut-colom</code>, público, rama <code>v1.0</code>. El proyecto y sus entregables están publicados; se conservó el historial y los archivos remotos no conflictivos, y la rama local sigue el remoto.</li>
       <li>Configurar HTTPS y <code>SESSION_COOKIE_SECURE=true</code> en despliegue; ejecutar pruebas en el ambiente de producción antes de liberar.</li>
-      <li>El CRUD de usuarios y RF-09 (novedades) siguen fuera de la implementación validada.</li>
       <li>Las fuentes diagramáticas están en PlantUML, no como archivo nativo de StarUML (.mdj); se indicó que las fuentes son suficientes para esta entrega.</li>
     </ul>
-    <div class="callout"><strong>Resultado:</strong> documentos, diagramas, mockup y evidencia de pruebas quedan alineados con la regla acordada y los resultados de 18 pruebas automatizadas. La publicación del repositorio y la validación de despliegue permanecen como tareas externas a este cierre.</div>
+    <div class="callout"><strong>Resultado:</strong> documentos, diagramas, mockup y evidencia quedan alineados con el código actualizado y 21 pruebas automatizadas. El proyecto está publicado en la rama <code>v1.0</code>; HTTPS y la validación en producción siguen pendientes para el despliegue.</div>
     <p class="small">Documento preparado para la entrega académica de Sofia Gonzales Herrera, IU Digital, docente Esteban Montoya.</p>
     <div class="footer"><span>Autos Colombia · Informe integral</span><span>5</span></div>
   </section>

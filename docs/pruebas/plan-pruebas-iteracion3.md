@@ -25,7 +25,7 @@ Verificar el alta de membresias, el registro y consulta de pagos mensuales, la v
 | PT-08 | Insertar valor cero directamente en MySQL | Rechazo por `ck_pago_mensual_valor`. | Conforme; restriccion CHECK rechaza. |
 | PT-09 | Insertar pago con usuario inexistente | Rechazo por clave foranea. | Conforme; FK rechaza. |
 | PT-10 | Consultar pagos por usuario/periodo mediante `EXPLAIN` | Uso del indice unico compuesto de usuario y periodo. | Conforme; usa `uq_pago_mensual_usuario_periodo`. |
-| PT-11 | Ejecutar suite automatizada | Sin fallos ni errores. | Conforme: 18 pruebas, 0 fallos, 0 errores (8 servicio, 3 controlador y 7 integración HTTP con H2). |
+| PT-11 | Ejecutar suite automatizada | Sin fallos ni errores. | Conforme: 21 pruebas, 0 fallos, 0 errores (8 servicio, 3 controlador y 10 integración HTTP con H2). |
 | PT-12 | Ejecutar `mysql/tables.sql` y arrancar la API | Crear esquema y conectar el backend a MySQL 8.4. | Conforme: esquema cargado y backend iniciado con MySQL 8.4.13. |
 | PT-13 | Iniciar sesión con administrador y operario | Aceptar credenciales válidas y devolver sus roles. | Conforme: `ADMINISTRADOR` y `OPERARIO`. |
 | PT-14 | Consultar mensualidades sin sesión | Rechazar acceso. | Conforme: 401. |
@@ -36,10 +36,14 @@ Verificar el alta de membresias, el registro y consulta de pagos mensuales, la v
 | PT-19 | Ejecutar escritura sin token CSRF / login con contraseña incorrecta | Rechazar las solicitudes con errores seguros. | Conforme: 403 / 401. |
 | PT-20 | Cerrar sesión y comprobar contraseña persistida | Invalidar sesión y almacenar contraseña con BCrypt. | Conforme: logout 204, sesión posterior 401 y hash BCrypt confirmado en MySQL. |
 | PT-21 | Registrar un período cuya membresía está vigente un solo día | Aceptar el período y conservar el valor mensual completo ingresado, sin prorrateo ni redondeo. | Conforme: prueba automatizada con H2 conserva el valor mensual completo de $125.000. |
+| PT-22 | Crear, consultar, actualizar y dar de baja un usuario | ADMINISTRADOR puede crear (201), consultar/actualizar (200) y dar de baja lógica (204); conservar la fila con `activo=false`. | Conforme: integración HTTP con H2; la baja no elimina el registro. |
+| PT-23 | Validar usuarios y permisos | Rechazar campos obligatorios faltantes (400), identificación duplicada (409), acceso anónimo (401) y acceso de OPERARIO a usuarios (403). | Conforme: integración HTTP con sesión y roles. |
+| PT-24 | Registrar y consultar novedades | ADMINISTRADOR/OPERARIO crean (201) y consultan (200); asociar exactamente un vehículo o estancia y usar responsable/fecha del servidor. | Conforme: integración HTTP con H2 verifica ambos tipos de asociación y metadatos de servidor. |
+| PT-25 | Rechazar novedades inválidas o escritura sin CSRF | Descripción vacía o dos asociaciones simultáneas: 400; POST sin token CSRF: 403. | Conforme: integración HTTP con H2. |
 
 ## Criterio de salida
 
-Casos PT-01 a PT-21 aprobados. No se particionan las tablas: el volumen de la actividad no lo justifica. Las pruebas MySQL usaron un contenedor local desechable y credenciales sintéticas; no equivalen a una certificación de producción.
+Casos PT-01 a PT-25 aprobados. No se particionan las tablas: el volumen de la actividad no lo justifica. Las pruebas MySQL usaron un contenedor local desechable y credenciales sintéticas; las pruebas nuevas de usuarios/novedades usaron H2. Ninguna equivale a certificación de producción.
 
 ## Pendientes fuera del alcance probado
 

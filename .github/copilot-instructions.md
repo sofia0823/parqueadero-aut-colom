@@ -20,7 +20,8 @@ Sistema académico de gestión del parqueadero Autos Colombia. La Iteración 3 i
 
 - Tecnologías: Java 21, Spring Boot, JPA, MySQL, React, Vite y Bootstrap.
 - El backend ya liquida estancias y registra el pago antes de la salida.
-- Se agregó el modelo de lectura `Usuario` y el flujo de membresías/pagos mensuales en backend y frontend. Los usuarios aún deben existir en la tabla `usuarios`; no hay CRUD de usuarios en la interfaz.
+- El CRUD de usuarios está disponible para ADMINISTRADOR, incluida baja lógica (`activo=false`); la baja no elimina registros relacionados con pagos, membresías o vehículos.
+- RF-09 está implementado como novedades asociadas a exactamente un vehículo o estancia. El backend usa la sesión autenticada para el responsable y el reloj del servidor para la fecha/hora.
 - Se implementó autenticación por sesión, BCrypt y CSRF; el backend exige sesión en `/api/**`, restringe mensualidades y creación de celdas a ADMINISTRADOR, y permite lectura operativa al OPERARIO.
 - El directorio `docs/diagramas/` contiene fuentes PlantUML/Mermaid, no un proyecto nativo de StarUML (`.mdj`).
 - El proyecto está publicado en `sofia0823/parqueadero-aut-colom`, rama `v1.0`, y la rama local sigue a `origin/v1.0`. Se conservaron los archivos remotos no conflictivos y el historial; evitar `force push`. Nunca compartir ni versionar tokens.
@@ -57,9 +58,8 @@ La deuda/vencimiento no debe inventarse como pago registrado. Se deriva de las m
 
 ## Pendientes e inconsistencias verificadas
 
-- RF-06 (CRUD de usuarios) permanece sin controlador/UI; el flujo de mensualidades requiere usuarios previamente registrados.
-- RF-09 (novedades) está documentado, pero no existe en el backend ni en el esquema desplegable.
-- RF-13 tiene autenticación/RBAC implementados para las rutas documentadas arriba; verificar y actualizar la matriz si se agregan operaciones o roles.
+- RF-06 y RF-09 están implementados. Usuarios/mensualidades son de ADMINISTRADOR; ADMINISTRADOR y OPERARIO pueden registrar y consultar novedades.
+- RF-13 tiene control por sesión/RBAC para las rutas documentadas; la matriz granular de todas las demás rutas aún debe revisarse antes de producción.
 - Los diagramas de las iteraciones están disponibles como fuentes PlantUML/Mermaid; la estudiante confirmó que no requiere el proyecto nativo StarUML `.mdj`.
 - El PDF actual tiene cinco páginas y su portada está completada con los datos proporcionados.
 - La URL sin punto final devuelve 404 y la variante con punto final solo contiene un README; confirmar con la estudiante antes de publicar.
@@ -75,7 +75,7 @@ La deuda/vencimiento no debe inventarse como pago registrado. Se deriva de las m
 - Se generaron fuentes PlantUML para casos de uso, secuencia y componentes de las tres iteraciones, un mockup HTML y un plan de pruebas resumido; la estudiante confirmó que las fuentes son suficientes.
 - Se generó `docs/entrega_iteracion3.pdf` (5 páginas) con resultados de RBAC actualizados y portada completada.
 - Se instalaron JDK 21, Maven 3.10.1 y Node.js LTS/npm en el equipo; Maven quedó en `%LOCALAPPDATA%\Programs\Apache\Maven-3.10.1`.
-- Validación ejecutada: `mvn test` pasó (18 pruebas, 0 fallos ni errores), incluyendo el caso de membresía vigente un día y Spring Boot con H2 en memoria; `npm run build` pasó. El esquema y la autorización HTTP también se probaron con Spring Boot + MySQL 8.4 efímero.
+- Validación ejecutada: `mvn test` pasó (21 pruebas, 0 fallos ni errores), incluyendo usuarios, novedades, sesión/CSRF, roles y pagos con H2 en memoria; `npm run build` pasó. El esquema y la autorización HTTP de pagos/autenticación también se probaron previamente con Spring Boot + MySQL 8.4 efímero.
 - `docs/pruebas/mensualidades.http` permite probar manualmente contra una instancia MySQL, con backend iniciado y usuario/membresía de prueba.
 - `mysql/tables.sql` se ejecutó en MySQL 8.4 efímero. Se validaron claves foráneas, `CHECK`, índices y planes `EXPLAIN`; no se justifica particionar el volumen académico.
 - Backend y endpoints se probaron contra MySQL: pago repetido devuelve el mismo ID; 20 solicitudes concurrentes produjeron una fila, con una respuesta 201 y 19 respuestas 200. Las solicitudes conflictivas recibieron 409 y las inválidas 400.
@@ -86,7 +86,7 @@ La deuda/vencimiento no debe inventarse como pago registrado. Se deriva de las m
 1. Definir la matriz RBAC básica (administrador/operario) está completado; también quedó confirmada la regla económica de cobro mensual completo para cualquier período con al menos un día de vigencia. Siguen pendientes las reglas de suspensión y reactivación.
 2. Revisar el esquema MySQL/JPA de membresías y pagos mensuales, preservando la tabla y endpoints de cobro por estancia. **Completado y validado en MySQL 8.4.**
 3. Implementar autenticación y autorización RBAC en backend según la matriz acordada; no confundir mensualista con rol. **Completado y probado con MySQL 8.4.**
-4. Completar pruebas focalizadas para fechas de vigencia, anulaciones y no regresión del pago por estancia. La prueba de una membresía vigente un día, la idempotencia secuencial/concurrente y el acceso RBAC ya fueron probados.
+4. Probar nuevas operaciones de usuarios/novedades, permisos, sesión/CSRF y no regresión de pagos; mantener pruebas de fechas de vigencia, idempotencia y autorización.
 5. La portada está completa y la estudiante confirmó que PlantUML es suficiente. Organizar el repositorio público y conectar la carpeta de trabajo antes de publicar.
 
 ## Comandos de validación
