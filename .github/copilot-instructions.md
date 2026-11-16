@@ -23,7 +23,7 @@ Sistema académico de gestión del parqueadero Autos Colombia. La Iteración 3 i
 - Se agregó el modelo de lectura `Usuario` y el flujo de membresías/pagos mensuales en backend y frontend. Los usuarios aún deben existir en la tabla `usuarios`; no hay CRUD de usuarios en la interfaz.
 - Se implementó autenticación por sesión, BCrypt y CSRF; el backend exige sesión en `/api/**`, restringe mensualidades y creación de celdas a ADMINISTRADOR, y permite lectura operativa al OPERARIO.
 - El directorio `docs/diagramas/` contiene fuentes PlantUML/Mermaid, no un proyecto nativo de StarUML (`.mdj`).
-- La carpeta del proyecto está inicializada en Git, con rama local `main`, remoto `origin` conectado a `sofia0823/parqueadero-aut-colom` y referencia `origin/v1.0` descargada. Aún no tiene commits locales ni se hizo push. El remoto contiene una plantilla ReadMe.com y archivos de modelo/datos; reconciliar y conservarlos antes de publicar.
+- La carpeta del proyecto está conectada a `sofia0823/parqueadero-aut-colom`; la rama local `v1.0` sigue a `origin/v1.0`. El historial del proyecto ya se integró localmente, conservando los archivos remotos no conflictivos. El push quedó pendiente porque GitHub rechazó la escritura de la cuenta autenticada; usar una cuenta con permiso de escritura. Nunca compartir ni versionar tokens.
 
 ## Decisiones acordadas para pagos mensuales
 
@@ -79,7 +79,7 @@ La deuda/vencimiento no debe inventarse como pago registrado. Se deriva de las m
 - `docs/pruebas/mensualidades.http` permite probar manualmente contra una instancia MySQL, con backend iniciado y usuario/membresía de prueba.
 - `mysql/tables.sql` se ejecutó en MySQL 8.4 efímero. Se validaron claves foráneas, `CHECK`, índices y planes `EXPLAIN`; no se justifica particionar el volumen académico.
 - Backend y endpoints se probaron contra MySQL: pago repetido devuelve el mismo ID; 20 solicitudes concurrentes produjeron una fila, con una respuesta 201 y 19 respuestas 200. Las solicitudes conflictivas recibieron 409 y las inválidas 400.
-- URL proporcionada para GitHub: https://github.com/sofia0823/parqueadero-aut-colom. Repositorio público de documentación ReadMe.com en rama `v1.0`; su guía de inicio todavía muestra instrucciones de plantilla y no contiene la aplicación. La carpeta local está conectada, pero no se ha hecho commit ni push.
+- URL proporcionada para GitHub: https://github.com/sofia0823/parqueadero-aut-colom. Repositorio público, rama `v1.0`. La historia del proyecto ya se integró en la copia local; el push no pudo completarse por falta de permiso de escritura de la cuenta GitHub autenticada.
 
 ## Plan de trabajo
 
