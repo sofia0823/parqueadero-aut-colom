@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Autos Colombia | Informe integral</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #1d2938; background: #e9eef4; font: 10pt/1.45 "Segoe UI", Arial, sans-serif; }
+    .page { position: relative; width: 210mm; min-height: 297mm; margin: 10px auto; padding: 19mm 21mm 18mm; background: #fff; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    h1 { margin: 0 0 12px; color: #173c60; font-size: 25pt; line-height: 1.15; }
+    h2 { margin: 0 0 12px; color: #173c60; font-size: 19pt; }
+    h3 { margin: 15px 0 6px; color: #22527c; font-size: 12pt; }
+    p { margin: 7px 0 10px; }
+    ul, ol { margin: 5px 0 11px; padding-left: 21px; }
+    li { margin: 4px 0; }
+    .cover { display: flex; flex-direction: column; justify-content: center; text-align: center; }
+    .mark { display: inline-block; margin: 0 auto 25px; padding: 9px 17px; border: 1px solid #d5e0eb; border-radius: 30px; color: #22527c; font-size: 10pt; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .cover h1 { font-size: 33pt; }
+    .cover h2 { margin: 8px 0 48px; color: #47627b; font-size: 17pt; font-weight: 500; }
+    .meta { display: grid; gap: 10px; max-width: 115mm; margin: 0 auto; text-align: left; }
+    .meta div { padding: 8px 11px; border-bottom: 1px solid #dbe3eb; }
+    .meta strong { display: inline-block; min-width: 40mm; color: #3d5267; }
+    .kicker { margin-bottom: 7px; color: #63809e; font-size: 8.5pt; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+    .callout { margin: 12px 0; padding: 11px 13px; border-left: 4px solid #327caf; background: #f0f6fb; }
+    .warning { border-left-color: #d29a31; background: #fff8e9; }
+    table { width: 100%; margin: 8px 0 13px; border-collapse: collapse; font-size: 8.5pt; }
+    th, td { padding: 6px 7px; border: 1px solid #d9e2eb; vertical-align: top; text-align: left; }
+    th { color: #173c60; background: #edf3f8; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .box { padding: 11px; border: 1px solid #dce5ed; border-radius: 7px; }
+    .box h3 { margin-top: 0; }
+    .small { color: #66788c; font-size: 8.5pt; }
+    .footer { position: absolute; right: 21mm; bottom: 9mm; left: 21mm; display: flex; justify-content: space-between; color: #78889a; font-size: 8pt; }
+    @media screen { .page { box-shadow: 0 5px 25px #17212f16; } }
+    @media print { body { background: white; } .page { margin: 0; } }
+  </style>
+</head>
+<body>
+  <section class="page cover">
+    <span class="mark">Ingeniería de Software</span>
+    <h1>Parqueadero<br>Autos Colombia</h1>
+    <h2>Informe integral del trabajo realizado</h2>
+    <div class="meta">
+      <div><strong>Estudiante</strong> Sofia Gonzales Herrera</div>
+      <div><strong>Institución</strong> IU Digital</div>
+      <div><strong>Asignatura</strong> Ingeniería de Software</div>
+      <div><strong>Docente</strong> Esteban Montoya</div>
+      <div><strong>Proyecto</strong> Sistema de información del parqueadero</div>
+      <div><strong>Enfoque</strong> Iteración 3 · Gestión de pagos mensuales</div>
+    </div>
+    <p style="margin-top:48px;color:#728196">Análisis, implementación, pruebas y estado de entrega</p>
+  </section>
+
+  <section class="page">
+    <p class="kicker">01 · Alcance y entregables</p>
+    <h2>Resumen ejecutivo</h2>
+    <p>El trabajo completa el análisis y la validación técnica de la gestión de pagos mensuales para Autos Colombia. El flujo permite asociar una mensualidad con un usuario y un período, controlar membresías, registrar pagos y consultar estados. Esta funcionalidad permanece separada del cobro de las estancias para preservar el comportamiento existente de entradas y salidas.</p>
+    <h3>Entregables preparados</h3>
+    <ul>
+      <li>Requerimientos funcionales/no funcionales y reglas del negocio para pagos mensuales.</li>
+      <li>Historias de usuario con criterios de aceptación.</li>
+      <li>Fuentes de diagramas de casos de uso, secuencia y componentes de las tres iteraciones, en PlantUML.</li>
+      <li>Mockup navegable en HTML estático para pagos mensuales.</li>
+      <li>Plan de pruebas resumido y checklist de cierre de Iteración 3.</li>
+      <li>Entrega académica en PDF y este informe integral en PDF.</li>
+      <li>Backend de pagos mensuales, membresías, autenticación/sesiones y control de acceso por roles, con pruebas automatizadas.</li>
+    </ul>
+    <div class="callout"><strong>Criterio de continuidad:</strong> el pago mensual no reutiliza la tabla del pago por estancia. La clave lógica usuario/período evita pagos duplicados; la idempotencia se verifica en el servicio y en solicitudes HTTP concurrentes.</div>
+    <h3>Componentes técnicos</h3>
+    <div class="two-col">
+      <div class="box"><h3>Backend</h3><p>Java 21, Spring Boot, Spring Data JPA y API REST. Servicios, controladores, repositorios y validaciones gestionan membresías y pagos.</p></div>
+      <div class="box"><h3>Interfaz y datos</h3><p>React/Vite consume la API. MySQL almacena usuarios, membresías, pagos mensuales y pagos por estancia con integridad referencial e índices.</p></div>
+    </div>
+    <div class="footer"><span>Autos Colombia · Informe integral</span><span>2</span></div>
+  </section>
+
+  <section class="page">
+    <p class="kicker">02 · Reglas y controles</p>
+    <h2>Reglas de negocio y seguridad</h2>
+    <h3>Política económica confirmada</h3>
+    <div class="callout"><strong>Mes completo:</strong> si la membresía está vigente al menos un día del período mensual, se cobra el valor mensual completo ingresado manualmente. No se prorratea ni redondea. La regla aplica a pagos nuevos; los registros históricos se conservan sin cambios.</div>
+    <p>Se aceptan períodos en formato <code>YYYY-MM</code> actuales o anteriores, no futuros; el valor debe ser positivo y el método debe ser permitido. La fecha y hora oficiales provienen del servidor. Una membresía debe cruzarse con al menos un día del mes para cubrir ese período.</p>
+    <h3>Idempotencia y persistencia</h3>
+    <ul>
+      <li>Un pago nuevo se crea con respuesta HTTP 201.</li>
+      <li>Una repetición con el mismo usuario, período, valor y método devuelve el registro existente (HTTP 200), sin duplicarlo.</li>
+      <li>Si ya existe el usuario/período con valor o método diferente, se rechaza como conflicto (HTTP 409) y no se sobrescribe el pago.</li>
+      <li>MySQL aplica clave foránea, unicidad usuario/período, restricción CHECK de valor positivo e índice compuesto para consulta.</li>
+    </ul>
+    <h3>Autenticación y autorización probadas</h3>
+    <table>
+      <thead><tr><th>Control</th><th>Resultado comprobado</th></tr></thead>
+      <tbody>
+        <tr><td>Sesión y credenciales</td><td>Login inválido 401; contraseñas almacenadas con BCrypt.</td></tr>
+        <tr><td>Permisos</td><td>Administrador puede consultar mensualidades; operario recibe 403. El operario puede consultar vehículos (200).</td></tr>
+        <tr><td>CSRF y logout</td><td>Escritura sin token CSRF rechazada (403); logout 204 e invalida la sesión.</td></tr>
+        <tr><td>Sesión anónima</td><td>Consulta mensualidades sin sesión rechazada (401).</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Los permisos descritos se verificaron en las rutas indicadas; no se afirma cobertura RBAC granular de todas las operaciones del sistema.</p>
+    <div class="footer"><span>Autos Colombia · Informe integral</span><span>3</span></div>
+  </section>
+
+  <section class="page">
+    <p class="kicker">03 · Verificación</p>
+    <h2>Resultados de las pruebas</h2>
+    <h3>Pruebas automatizadas</h3>
+    <p><strong><code>mvn test</code>:</strong> 18 pruebas aprobadas, 0 fallos y 0 errores: 8 de servicio, 3 de controlador y 7 de integración HTTP con H2. Se incluye el caso de membresía vigente un día: el valor mensual manual de $125.000 se conserva completo, sin prorrateo.</p>
+    <h3>MySQL 8.4 y API HTTP</h3>
+    <ul>
+      <li>Esquema creado y aplicación conectada a MySQL 8.4.13 en un entorno efímero.</li>
+      <li>20 solicitudes concurrentes idénticas: 1 respuesta 201, 19 respuestas 200 y una sola fila/pago.</li>
+      <li>Datos conflictivos rechazados con 409; período futuro y valor cero rechazados con 400.</li>
+      <li>Inserciones directas inválidas rechazadas por CHECK y FK; `EXPLAIN` usa el índice único compuesto de usuario y período.</li>
+      <li>Login, roles, CSRF, logout, sesión invalidada y BCrypt verificados con MySQL.</li>
+      <li>No se particionaron las tablas: el volumen académico no justifica su complejidad adicional.</li>
+    </ul>
+    <div class="callout warning"><strong>Alcance de evidencia:</strong> las pruebas MySQL se realizaron con un contenedor local desechable y datos sintéticos. No constituyen certificación del entorno productivo. El build de frontend fue validado previamente; no se modificó frontend en esta última actualización.</div>
+    <h3>Fuentes del proyecto</h3>
+    <p>Los requisitos e historias están en <code>docs/requerimientos.md</code> y <code>docs/historias_usuario.md</code>. El plan/checklist están en <code>docs/pruebas/</code>; los diagramas PlantUML en <code>docs/diagramas/</code>; el mockup en <code>docs/mockups/pagos-mensuales.html</code>. El documento académico es <code>docs/entrega_iteracion3.pdf</code>.</p>
+    <div class="footer"><span>Autos Colombia · Informe integral</span><span>4</span></div>
+  </section>
+
+  <section class="page">
+    <p class="kicker">04 · Cierre y estado</p>
+    <h2>Conclusiones y pendientes</h2>
+    <ul>
+      <li>La Iteración 3 tiene una regla económica inequívoca y documentada: mes completo al existir al menos un día de vigencia.</li>
+      <li>Los pagos mensuales se asocian a usuario/período; validaciones, restricciones e idempotencia protegen su integridad.</li>
+      <li>Las pruebas de servicio, HTTP, MySQL e idempotencia concurrente respaldan los resultados reportados.</li>
+      <li>Los diagramas editables se entregan como fuentes PlantUML, y el mockup HTML es una maqueta estática.</li>
+    </ul>
+    <h3>Pendientes transparentes</h3>
+    <ul>
+      <li>El repositorio proporcionado es <code>sofia0823/parqueadero-aut-colom</code>, público, rama <code>v1.0</code>. Es una plantilla para documentación de ReadMe.com y no contiene el código de la aplicación. La carpeta local ya está inicializada con Git, tiene configurado <code>origin</code> y descargó <code>origin/v1.0</code>; aún no se integraron los historiales ni se hizo push.</li>
+      <li>Configurar HTTPS y <code>SESSION_COOKIE_SECURE=true</code> en despliegue; ejecutar pruebas en el ambiente de producción antes de liberar.</li>
+      <li>El CRUD de usuarios y RF-09 (novedades) siguen fuera de la implementación validada.</li>
+      <li>Las fuentes diagramáticas están en PlantUML, no como archivo nativo de StarUML (.mdj); se indicó que las fuentes son suficientes para esta entrega.</li>
+    </ul>
+    <div class="callout"><strong>Resultado:</strong> documentos, diagramas, mockup y evidencia de pruebas quedan alineados con la regla acordada y los resultados de 18 pruebas automatizadas. La publicación del repositorio y la validación de despliegue permanecen como tareas externas a este cierre.</div>
+    <p class="small">Documento preparado para la entrega académica de Sofia Gonzales Herrera, IU Digital, docente Esteban Montoya.</p>
+    <div class="footer"><span>Autos Colombia · Informe integral</span><span>5</span></div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,13 @@
+flowchart LR
+  O([Operario]) --> RV[Registrar vehículo]
+  O --> EI[Registrar entrada]
+  O --> ES[Registrar salida]
+  O --> RN[Registrar novedad]
+  A([Administrador]) --> GU[Gestionar usuarios]
+  A --> GC[Gestionar celdas]
+  A --> PG[Gestionar pagos]
+  A --> CH[Consultar historial]
+  A --> PA[Consultar panel]
+  EI --> CV[Validar vehículo]
+  EI --> AC[Asignar celda disponible]
+  ES --> LC[Liberar celda]

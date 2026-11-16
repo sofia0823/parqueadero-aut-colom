@@ -1,0 +1,76 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor Personal
+actor Operario
+actor Administrador
+
+Operario -|> Personal
+Administrador -|> Personal
+
+rectangle "Sistema Autos Colombia" {
+  package "Seguridad transversal" {
+    usecase "Iniciar sesion" as UC_Login
+    usecase "Cerrar sesion" as UC_Logout
+  }
+
+  package "Iteracion 1 - Entradas y salidas" {
+    usecase "Registrar entrada" as UC_Entrada
+    usecase "Asignar celda disponible" as UC_Asignar
+    usecase "Registrar salida" as UC_Salida
+    usecase "Calcular cobro por estancia" as UC_Calcular
+    usecase "Confirmar pago por estancia" as UC_PagoEstancia
+  }
+
+  package "Iteracion 2 - Usuarios y celdas" {
+    usecase "Gestionar usuarios\n(requisito pendiente)" as UC_Usuarios
+    usecase "Consultar vehiculos" as UC_Vehiculos
+    usecase "Gestionar celdas" as UC_Celdas
+    usecase "Consultar ocupacion" as UC_Ocupacion
+  }
+
+  package "Iteracion 3 - Pagos mensuales" {
+    usecase "Inscribir mensualista" as UC_Inscribir
+    usecase "Finalizar membresia" as UC_Finalizar
+    usecase "Registrar pago mensual" as UC_PagoMensual
+    usecase "Consultar estado por periodo" as UC_Estado
+    usecase "Validar membresia y periodo" as UC_Validar
+  }
+}
+
+Personal --> UC_Login
+Personal --> UC_Logout
+Operario --> UC_Entrada
+Operario --> UC_Salida
+Operario --> UC_Vehiculos
+Operario --> UC_Ocupacion
+Administrador --> UC_Vehiculos
+Administrador --> UC_Usuarios
+Administrador --> UC_Celdas
+Administrador --> UC_Ocupacion
+Administrador --> UC_Inscribir
+Administrador --> UC_Finalizar
+Administrador --> UC_PagoMensual
+Administrador --> UC_Estado
+
+UC_Entrada ..> UC_Asignar : <<include>>
+UC_Salida ..> UC_Calcular : <<include>>
+UC_Salida ..> UC_PagoEstancia : <<include>>
+UC_PagoMensual ..> UC_Validar : <<include>>
+
+note bottom of UC_Login
+  Cuentas del personal separadas de usuarios/clientes.
+  Sesion y CSRF en backend; contrasenas BCrypt.
+  Las rutas protegidas requieren sesion valida.
+end note
+note bottom of UC_PagoMensual
+  Flujo separado del pago por estancia.
+  Mensualidades y creacion de celdas requieren
+  rol Administrador en el backend.
+end note
+note bottom of UC_Usuarios
+  No hay CRUD de usuarios disponible
+  en el backend actual.
+end note
+@enduml

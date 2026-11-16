@@ -1,0 +1,66 @@
+@baseUrl = http://localhost:8080
+@usuarioId = 1
+@periodo = 2026-11
+@username = test-admin
+@password = replace-with-a-local-test-password
+@csrfCookie = XSRF-TOKEN=copy-value-from-csrf-response
+@csrfToken = copy-value-from-csrf-response
+@sessionCookie = JSESSIONID=copy-value-from-login-response
+
+### Obtener cookie/token CSRF; copia el valor de XSRF-TOKEN en las variables anteriores
+GET {{baseUrl}}/api/auth/csrf
+Accept: application/json
+
+### Iniciar sesion como administrador local; copia JSESSIONID de Set-Cookie
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+Cookie: {{csrfCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+
+{
+  "username": "{{username}}",
+  "password": "{{password}}"
+}
+
+### Consultar mensualistas inscritos
+GET {{baseUrl}}/api/mensualidades/membresias
+Accept: application/json
+Cookie: {{sessionCookie}}; {{csrfCookie}}
+
+### Inscribir usuario existente (ejecutar solo si no tiene membresía vigente)
+POST {{baseUrl}}/api/mensualidades/membresias
+Content-Type: application/json
+Accept: application/json
+Cookie: {{sessionCookie}}; {{csrfCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+
+{
+  "usuarioId": {{usuarioId}},
+  "fechaInicio": "2026-11-01"
+}
+
+### Consultar estado del período
+GET {{baseUrl}}/api/mensualidades/estado?periodo={{periodo}}
+Accept: application/json
+Cookie: {{sessionCookie}}; {{csrfCookie}}
+
+### Registrar un pago mensual
+### Requiere que usuarioId exista, tenga membresía para el período y aún no tenga pago.
+### Repetir exactamente la solicitud devuelve el mismo pago con HTTP 200; no crea otro.
+POST {{baseUrl}}/api/mensualidades/pagos
+Content-Type: application/json
+Accept: application/json
+Cookie: {{sessionCookie}}; {{csrfCookie}}
+X-XSRF-TOKEN: {{csrfToken}}
+
+{
+  "usuarioId": {{usuarioId}},
+  "periodo": "{{periodo}}",
+  "valor": 125000,
+  "metodo": "EFECTIVO"
+}
+
+### Verificar que el pago quedó registrado
+GET {{baseUrl}}/api/mensualidades/estado?periodo={{periodo}}
+Accept: application/json
+Cookie: {{sessionCookie}}; {{csrfCookie}}

@@ -1,0 +1,16 @@
+classDiagram
+ class Usuario {+Long id +String numeroDocumento +String nombres +String telefono +String correo}
+ class Vehiculo {+Long id +String placa +String propietario +String telefono +String tipo}
+ class Celda {+Long id +String codigo +String tipo +EstadoCelda estado}
+ class Estancia {+Long id +LocalDateTime entrada +LocalDateTime salida}
+ class Pago {+Long id +BigDecimal valor +LocalDateTime fechaPago +String estado}
+ class MembresiaMensual {+Long id +LocalDate fechaInicio +LocalDate fechaFin +String estado}
+ class PagoMensual {+Long id +String periodo +BigDecimal valor +LocalDateTime fechaPago +String estado}
+ class Novedad {+Long id +LocalDateTime fechaHora +String descripcion}
+ Usuario "1" --> "0..*" Vehiculo : registra/posee
+ Vehiculo "1" --> "0..*" Estancia : tiene historial
+ Celda "1" --> "0..*" Estancia : asignada en
+ Estancia "1" --> "0..1" Pago : se liquida con
+ Usuario "1" --> "0..*" MembresiaMensual : se inscribe
+ Usuario "1" --> "0..*" PagoMensual : realiza
+ Estancia "1" --> "0..*" Novedad : RF-09 pendiente

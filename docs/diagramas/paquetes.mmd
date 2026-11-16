@@ -1,0 +1,21 @@
+flowchart TB
+ subgraph UI["infrastructure.web"]
+  C[VehiculoController / REST]
+ end
+ subgraph APP["application"]
+  S[VehiculoService / casos de uso]
+ end
+ subgraph DOMAIN["domain"]
+  M[Modelos de dominio]
+  P[Puertos / interfaces de repositorio]
+ end
+ subgraph INFRA["infrastructure.persistence"]
+  J[JpaVehiculoRepository]
+  SD[Spring Data JPA]
+ end
+ C --> S
+ S --> M
+ S --> P
+ J -. implementa .-> P
+ J --> SD
+ SD --> DB[(MySQL)]

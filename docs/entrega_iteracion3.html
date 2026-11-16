@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Autos Colombia | Entrega Iteración 3</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #1d2938; background: #e9eef4; font: 10.5pt/1.48 "Segoe UI", Arial, sans-serif; }
+    .page { position: relative; width: 210mm; min-height: 297mm; margin: 10px auto; padding: 20mm 21mm 19mm; background: white; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+    h1 { margin: 0 0 12px; color: #173c60; font-size: 25pt; line-height: 1.15; }
+    h2 { margin: 0 0 12px; color: #173c60; font-size: 19pt; }
+    h3 { margin: 16px 0 6px; color: #22527c; font-size: 12.5pt; }
+    p { margin: 7px 0 11px; }
+    ul, ol { margin: 5px 0 12px; padding-left: 21px; }
+    li { margin: 4px 0; }
+    .cover { display: flex; flex-direction: column; justify-content: center; text-align: center; }
+    .cover .mark { display: inline-block; margin: 0 auto 25px; padding: 10px 18px; border: 1px solid #d5e0eb; border-radius: 30px; color: #22527c; font-size: 11pt; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .cover h1 { font-size: 34pt; }
+    .cover h2 { margin: 9px 0 50px; color: #47627b; font-size: 19pt; font-weight: 500; }
+    .meta { display: grid; gap: 12px; max-width: 115mm; margin: 0 auto; text-align: left; }
+    .meta div { padding: 9px 12px; border-bottom: 1px solid #dbe3eb; }
+    .meta strong { display: inline-block; min-width: 42mm; color: #3d5267; }
+    .cover-foot { margin-top: 55px; color: #728196; }
+    .kicker { margin-bottom: 7px; color: #63809e; font-size: 9pt; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+    .callout { margin: 13px 0; padding: 12px 14px; border-left: 4px solid #327caf; background: #f0f6fb; }
+    .warning { border-left-color: #d29a31; background: #fff8e9; }
+    table { width: 100%; margin: 9px 0 14px; border-collapse: collapse; font-size: 9pt; }
+    th, td { padding: 7px 8px; border: 1px solid #d9e2eb; vertical-align: top; text-align: left; }
+    th { color: #173c60; background: #edf3f8; }
+    .small { color: #66788c; font-size: 9pt; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+    .box { padding: 12px; border: 1px solid #dce5ed; border-radius: 8px; }
+    .box h3 { margin-top: 0; }
+    .footer { position: absolute; right: 21mm; bottom: 10mm; left: 21mm; display: flex; justify-content: space-between; color: #78889a; font-size: 8.5pt; }
+    @media screen {
+      .page { box-shadow: 0 5px 25px #17212f16; }
+    }
+    @media print {
+      body { background: white; }
+      .page { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <section class="page cover">
+    <span class="mark">Ingeniería de Software</span>
+    <h1>Parqueadero<br>Autos Colombia</h1>
+    <h2>Iteración 3 · Gestión de pagos mensuales</h2>
+    <div class="meta">
+      <div><strong>Estudiante(s)</strong> Sofia Gonzales Herrera</div>
+      <div><strong>Institución</strong> IU Digital</div>
+      <div><strong>Asignatura</strong> Ingeniería de Software</div>
+      <div><strong>Docente</strong> Esteban Montoya</div>
+      <div><strong>Fecha</strong> 15 de noviembre de 2026</div>
+    </div>
+    <p class="cover-foot">Documento de análisis, diseño y validación del sistema</p>
+  </section>
+
+  <section class="page">
+    <p class="kicker">01 · Contexto</p>
+    <h2>Introducción</h2>
+    <p>Autos Colombia requiere apoyar la operación diaria del parqueadero y administrar los pagos de los clientes que adquieren una mensualidad. La Iteración 3 incorpora un flujo independiente para inscribir mensualistas, registrar pagos por usuario y período, y consultar estados. Se conserva el cobro vigente por estancia; no se reutiliza la tabla de pagos de salida para representar mensualidades.</p>
+    <p>El alcance funcional se documenta junto con sus criterios de aceptación, historias de usuario, diagramas, mockup y plan de pruebas. La validación técnica incluye una instancia desechable de MySQL 8.4 y la suite automatizada de backend con H2.</p>
+    <h3>Objetivo</h3>
+    <p>Definir y verificar un registro de pagos mensuales consistente, trazable e idempotente, asociado a un usuario existente y a un período en formato <code>YYYY-MM</code>.</p>
+    <h3>Alcance de la Iteración 3</h3>
+    <ul>
+      <li>Inscribir y finalizar membresías mensuales.</li>
+      <li>Registrar, listar y consultar el estado de pagos por período.</li>
+      <li>Validar valor positivo, método de pago, vigencia de membresía y período no futuro.</li>
+      <li>Prevenir duplicados mediante clave única usuario/período e idempotencia en el backend.</li>
+      <li>Mantener separados el pago mensual y el pago de una estancia.</li>
+      <li>Autenticar al personal y aplicar permisos de rol y CSRF en las operaciones protegidas.</li>
+    </ul>
+    <div class="callout"><strong>Regla económica acordada:</strong> si la membresía está vigente al menos un día del período, se cobra el valor mensual completo ingresado manualmente, sin prorrateo ni redondeo. La regla aplica a pagos nuevos; se conservan los pagos históricos.</div>
+    <div class="footer"><span>Autos Colombia · Iteración 3</span><span>2</span></div>
+  </section>
+
+  <section class="page">
+    <p class="kicker">02 · Requerimientos e historias</p>
+    <h2>Entregables funcionales</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Requerimiento</th><th>Criterio resumido</th></tr></thead>
+      <tbody>
+        <tr><td>RF-10</td><td>Registrar pago mensual</td><td>Usuario, período, valor mensual completo positivo, método y fecha del servidor; sin prorrateo; flujo separado del cobro por estancia.</td></tr>
+        <tr><td>RF-14</td><td>Gestionar mensualistas</td><td>Inscribir y finalizar la membresía de un usuario existente, conservando fechas de vigencia.</td></tr>
+        <tr><td>RF-15</td><td>Consultar estado</td><td>Mostrar pagado, pendiente o vencido según el período, la vigencia y los pagos registrados.</td></tr>
+        <tr><td>RNF-12</td><td>Idempotencia</td><td>Solicitudes iguales, incluso concurrentes, dejan un solo pago y devuelven el mismo ID.</td></tr>
+        <tr><td>RNF-13</td><td>Integridad</td><td>FK, unicidad usuario/período y restricción de valor positivo en MySQL.</td></tr>
+        <tr><td>RNF-14</td><td>Errores claros</td><td>400 para validaciones; 409 para datos distintos sobre una clave ya registrada.</td></tr>
+        <tr><td>RNF-16</td><td>Seguridad de acceso</td><td>Sesión, BCrypt, CSRF y autorización de backend por rol.</td></tr>
+      </tbody>
+    </table>
+    <h3>Historias principales</h3>
+    <div class="two-col">
+      <div class="box">
+        <h3>HU-07 · Registrar pago</h3>
+        <p>Como administrador, quiero registrar el pago de un mensualista para controlar la cartera.</p>
+        <ul><li>Período actual o anterior; no futuro.</li><li>Valor positivo y método permitido.</li><li>Un día de vigencia cubre el período completo, sin prorrateo.</li><li>Repetición exacta no duplica; cambio de valor/método produce conflicto.</li></ul>
+      </div>
+      <div class="box">
+        <h3>HU-10 · Gestionar membresía</h3>
+        <p>Como administrador, quiero inscribir o finalizar una membresía para determinar qué períodos cubre.</p>
+        <ul><li>Usuario existente y activo.</li><li>Fecha de inicio no futura.</li><li>Repetición idéntica no crea otra membresía.</li></ul>
+      </div>
+    </div>
+    <div class="box" style="margin-top:13px">
+      <h3>HU-11 · Consultar estado</h3>
+      <p>Como administrador, quiero consultar el estado de mensualidad por período para identificar pagos, pendientes y vencidos. Los períodos futuros no se consultan y la fecha oficial del pago procede del servidor.</p>
+    </div>
+    <p class="small">Los requerimientos completos y sus verificaciones se encuentran en docs/requerimientos.md y docs/historias_usuario.md.</p>
+    <div class="footer"><span>Autos Colombia · Iteración 3</span><span>3</span></div>
+  </section>
+
+  <section class="page">
+    <p class="kicker">03 · Diseño del sistema</p>
+    <h2>Diseño y mockup</h2>
+    <h3>Casos de uso</h3>
+    <p>El actor Operario participa en entradas, salidas y consultas operativas. El Administrador gestiona usuarios/celdas, membresías y pagos. El pago mensual incluye la validación del período y de la cobertura de membresía; el cobro por estancia conserva su flujo independiente.</p>
+    <h3>Secuencia resumida del pago</h3>
+    <ol>
+      <li>El administrador envía usuario, período, valor y método al endpoint de pagos mensuales.</li>
+      <li>El servicio valida los datos y bloquea el usuario para serializar solicitudes concurrentes.</li>
+      <li>Consulta el pago por usuario/período. Si es idéntico, devuelve el registro existente; si difiere, responde conflicto.</li>
+      <li>Si no existe, verifica que una membresía cubra el período, persiste el pago y devuelve 201.</li>
+    </ol>
+    <h3>Componentes</h3>
+    <p>La interfaz React consume controladores REST de Spring Boot. Los servicios de aplicación operan sobre puertos de repositorio implementados con Spring Data JPA y MySQL. La autenticación por sesión, BCrypt y CSRF protegen el acceso; el backend reserva mensualidades y creación de celdas al administrador, y permite al operario lectura operativa.</p>
+    <h3>Mockup de pagos mensuales</h3>
+    <p>La propuesta responsive presenta resumen del período, formulario de pago y tabla de estados. Utiliza datos ficticios y es una maqueta estática, no una pantalla conectada al backend.</p>
+    <div class="callout"><strong>Fuentes editables:</strong> docs/diagramas/casos_uso_iteraciones.puml, secuencia_iteraciones.puml y componentes_iteraciones.puml; maqueta: docs/mockups/pagos-mensuales.html.</div>
+    <p class="small">Los diagramas se entregan como fuentes PlantUML editables; no se generó un proyecto nativo de StarUML (.mdj) porque StarUML no está instalado en este entorno.</p>
+    <div class="footer"><span>Autos Colombia · Iteración 3</span><span>4</span></div>
+  </section>
+
+  <section class="page">
+    <p class="kicker">04 · Validación</p>
+    <h2>Plan y resultados de pruebas</h2>
+    <table>
+      <thead><tr><th>Prueba</th><th>Resultado esperado</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td>Alta/repetición de membresía</td><td>201 / 200, sin duplicado</td><td>Aprobada</td></tr>
+        <tr><td>Pago y repetición idéntica</td><td>201 / 200, mismo ID</td><td>Aprobada</td></tr>
+        <tr><td>20 pagos idénticos concurrentes</td><td>1 respuesta 201, 19 de 200, una fila</td><td>Aprobada</td></tr>
+        <tr><td>Mismo usuario/período, valor distinto</td><td>409, conservar original</td><td>Aprobada</td></tr>
+        <tr><td>Período futuro / valor cero</td><td>400</td><td>Aprobada</td></tr>
+        <tr><td>FK y CHECK de MySQL</td><td>Rechazar referencias inválidas y valor no positivo</td><td>Aprobada</td></tr>
+        <tr><td>Login, roles, CSRF y logout</td><td>401/403 para accesos no permitidos; 200/204 para acciones autorizadas</td><td>Aprobada con MySQL 8.4</td></tr>
+        <tr><td>Hash de credenciales</td><td>Contraseña persistida con BCrypt; credencial inválida rechazada</td><td>Aprobada</td></tr>
+        <tr><td>Membresía vigente un día</td><td>Conservar el valor mensual completo, sin prorrateo</td><td>Aprobada en prueba automatizada con H2</td></tr>
+        <tr><td>Suite automatizada</td><td>0 fallos ni errores</td><td>18 pruebas aprobadas</td></tr>
+      </tbody>
+    </table>
+    <p>La prueba de motor se ejecutó en MySQL 8.4 efímero. `EXPLAIN` mostró el uso del índice único usuario/período para localizar pagos. No se particionó: el volumen académico es reducido y la partición aumentaría complejidad sin beneficio medido.</p>
+    <h3>Conclusiones</h3>
+    <ul>
+      <li>La gestión de pagos mensuales funciona como flujo separado y conserva el cobro por estancia.</li>
+      <li>La clave única y el bloqueo transaccional evitan la duplicación del pago ante repetición y concurrencia.</li>
+      <li>Las validaciones y restricciones del backend/MySQL protegen los datos de pago probados.</li>
+      <li>La autenticación/RBAC ya protege las rutas verificadas; antes de producción se debe configurar HTTPS y publicar el código actualizado en un repositorio accesible.</li>
+    </ul>
+    <div class="callout warning"><strong>Repositorio:</strong> github.com/sofia0823/parqueadero-aut-colom es público (rama v1.0), pero es una plantilla ReadMe.com y no contiene la aplicación. La carpeta local ya está conectada con Git y descargó la rama remota; aún no se integraron los historiales ni se publicó código.</div>
+    <p class="small">Plan detallado y evidencia resumida: docs/pruebas/plan-pruebas-iteracion3.md y docs/pruebas/checklist-iteracion3.md.</p>
+    <div class="footer"><span>Autos Colombia · Iteración 3</span><span>5</span></div>
+  </section>
+</body>
+</html>

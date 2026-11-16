@@ -1,0 +1,19 @@
+# Node.js dependencies and build output
+node_modules/
+**/node_modules/
+frontend/dist/
+
+# Java build output
+**/target/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Operating system files
+.DS_Store
+Thumbs.db

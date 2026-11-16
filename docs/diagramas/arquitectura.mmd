@@ -1,0 +1,10 @@
+flowchart TB
+  U[Operario / Administrador] --> UI[React + Bootstrap]
+  UI -->|HTTP JSON| API[Controladores REST Spring Boot]
+  API --> APP[Casos de uso / Servicios de aplicación]
+  APP --> DOM[Dominio: Vehículo, Estancia, Celda, Usuario, Pago, Novedad]
+  APP --> PORT[Puertos de repositorio]
+  PORT --> INF[Adaptadores Spring Data JPA]
+  INF --> DB[(MySQL)]
+  UI -. compilación dist .-> STATIC[Spring Boot sirve frontend estático]
+  STATIC -. mismo despliegue .-> API

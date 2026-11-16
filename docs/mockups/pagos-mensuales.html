@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mockup | Pagos mensuales - Autos Colombia</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: #17212f;
+      background: #f3f6fa;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; }
+    .shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 100vh; }
+    aside { padding: 28px 18px; color: #eaf0f8; background: #13243b; }
+    .brand { margin: 0 0 34px; font-size: 19px; font-weight: 750; }
+    .brand small { display: block; margin-top: 5px; color: #9fb3ca; font-size: 12px; font-weight: 500; }
+    nav { display: grid; gap: 8px; }
+    nav a { padding: 11px 12px; border-radius: 8px; color: #cad7e6; text-decoration: none; font-size: 14px; }
+    nav a[aria-current="page"] { color: #fff; background: #294363; }
+    main { width: min(1240px, 100%); min-width: 0; margin: 0 auto; padding: 32px clamp(18px, 4vw, 52px); }
+    .eyebrow { color: #687a91; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 7px 0 4px; font-size: clamp(26px, 4vw, 34px); }
+    .subtitle { margin: 0; color: #657388; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0; }
+    .card, .stat { border: 1px solid #e1e7ef; border-radius: 12px; background: #fff; box-shadow: 0 3px 12px #17212f08; }
+    .stat { padding: 17px 19px; }
+    .stat span { display: block; color: #66768a; font-size: 13px; }
+    .stat strong { display: block; margin-top: 7px; font-size: 24px; }
+    .grid { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.5fr); gap: 18px; align-items: start; }
+    .grid > section { min-width: 0; }
+    .card { padding: 21px; }
+    .card h2 { margin: 0 0 4px; font-size: 18px; }
+    .hint { margin: 0 0 18px; color: #6b788b; font-size: 13px; line-height: 1.5; }
+    label { display: block; margin: 14px 0 6px; font-size: 13px; font-weight: 650; }
+    input, select { width: 100%; min-height: 42px; padding: 9px 11px; border: 1px solid #cad4e0; border-radius: 7px; color: #17212f; background: #fff; font: inherit; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    button { min-height: 42px; margin-top: 18px; padding: 0 16px; border: 0; border-radius: 7px; color: white; background: #1769aa; font: inherit; font-weight: 700; }
+    .secondary { color: #24587f; background: #eaf3fa; }
+    .toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: end; margin: 18px 0 12px; }
+    .toolbar label { flex: 1; margin: 0; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+    th, td { padding: 12px 9px; border-bottom: 1px solid #e8edf3; text-align: left; }
+    th { color: #68778b; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+    .badge { display: inline-block; padding: 5px 9px; border-radius: 20px; color: #17683b; background: #e7f6ec; font-size: 11px; font-weight: 700; }
+    .muted { color: #68778b; }
+    .note { margin-top: 18px; padding: 11px 13px; border-left: 3px solid #e0a13a; color: #66532f; background: #fff8e9; font-size: 12px; line-height: 1.5; }
+    @media (max-width: 1000px) {
+      .shell { grid-template-columns: 1fr; }
+      aside { padding: 16px 18px; }
+      .brand { margin: 0 0 12px; }
+      nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .stats { grid-template-columns: 1fr; gap: 9px; }
+      .stat { padding: 13px 15px; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+      .toolbar { align-items: stretch; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <p class="brand">Autos Colombia<small>Administración del parqueadero</small></p>
+      <nav aria-label="Navegación principal">
+        <a href="#">Resumen</a>
+        <a href="#">Vehículos</a>
+        <a href="#">Entradas y salidas</a>
+        <a href="#">Celdas</a>
+        <a href="#" aria-current="page">Pagos mensuales</a>
+      </nav>
+    </aside>
+    <main>
+      <div class="eyebrow">Iteración 3 · Administración</div>
+      <h1>Pagos mensuales</h1>
+      <p class="subtitle">Inscripción de mensualistas y seguimiento de pagos por período.</p>
+
+      <section class="stats" aria-label="Resumen del período">
+        <div class="stat"><span>Mensualistas activos</span><strong>24</strong></div>
+        <div class="stat"><span>Pagos recibidos · Nov 2026</span><strong>18</strong></div>
+        <div class="stat"><span>Pendientes · Nov 2026</span><strong>6</strong></div>
+      </section>
+
+      <div class="grid">
+        <section class="card" aria-labelledby="payment-title">
+          <h2 id="payment-title">Registrar pago</h2>
+          <p class="hint">Selecciona un mensualista y el período que cubre el pago.</p>
+          <form>
+            <label for="customer">Usuario mensualista</label>
+            <select id="customer">
+              <option>Selecciona un usuario</option>
+              <option>1045 · Laura Gómez</option>
+              <option>2081 · Carlos Ruiz</option>
+            </select>
+            <div class="form-row">
+              <div>
+                <label for="period">Período</label>
+                <input id="period" type="month" value="2026-11">
+              </div>
+              <div>
+                <label for="amount">Valor (COP)</label>
+                <input id="amount" type="number" min="1" placeholder="125000">
+              </div>
+            </div>
+            <label for="method">Método de pago</label>
+            <select id="method">
+              <option>Efectivo</option>
+              <option>Tarjeta</option>
+              <option>Transferencia</option>
+            </select>
+            <button type="button">Registrar pago</button>
+          </form>
+          <p class="note">La fecha y hora se asignan en el servidor. Un envío idéntico no duplica el pago.</p>
+        </section>
+
+        <section class="card" aria-labelledby="history-title">
+          <h2 id="history-title">Estado por período</h2>
+          <div class="toolbar">
+            <label for="filter-period">Período consultado
+              <input id="filter-period" type="month" value="2026-11">
+            </label>
+            <button class="secondary" type="button">Consultar</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Usuario</th><th>Período</th><th>Valor</th><th>Fecha de pago</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td>Laura Gómez</td><td>2026-11</td><td>$125.000</td><td>05 nov 2026</td><td><span class="badge">Pagado</span></td></tr>
+                <tr><td>Carlos Ruiz</td><td>2026-11</td><td class="muted">—</td><td class="muted">—</td><td><span class="badge" style="color:#805b09;background:#fff2cd">Pendiente</span></td></tr>
+                <tr><td>María Torres</td><td>2026-11</td><td>$125.000</td><td>01 nov 2026</td><td><span class="badge">Pagado</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="hint" style="margin:15px 0 0">Los estados se calculan con la membresía y los pagos registrados.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

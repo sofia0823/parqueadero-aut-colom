@@ -1,0 +1,113 @@
+@startuml
+autonumber
+actor Operario
+actor Administrador
+participant "React UI" as UI
+participant "REST API" as API
+participant "AuthController" as Auth
+participant "Spring Security" as Security
+participant "EstanciaService" as ES
+participant "MensualidadService" as MS
+participant "Repositorios JPA" as Repo
+participant "CuentaPersonalRepository" as AccountRepo
+database MySQL
+
+== Seguridad transversal ==
+Administrador -> UI: Solicitar inicio de sesion
+UI -> API: GET /api/auth/csrf
+API -> Security: Generar token CSRF
+Security --> UI: Cookie XSRF-TOKEN
+Administrador -> UI: Enviar usuario y contrasena
+UI -> API: POST /api/auth/login + X-XSRF-TOKEN
+API -> Auth: Autenticar credenciales
+Auth -> Security: AuthenticationManager.authenticate(...)
+Security -> AccountRepo: Buscar cuenta y rol
+AccountRepo -> MySQL: SELECT cuentas_personal
+MySQL --> AccountRepo: Cuenta BCrypt y rol
+AccountRepo --> Security: Usuario del personal
+Security --> Auth: Autenticacion valida
+Auth --> API: Guardar contexto en sesion
+API --> UI: 200 + cookie JSESSIONID HttpOnly
+note over UI,Security
+  Las rutas protegidas requieren sesion;
+  las escrituras verifican CSRF.
+  Mensualidades y creacion de celdas requieren
+  rol Administrador.
+end note
+
+== Iteracion 1: entrada ==
+Operario -> UI: Registrar entrada (vehiculo, celda)
+UI -> API: POST /api/estancias/entrada
+API -> ES: registrarEntrada(...)
+ES -> Repo: validar vehiculo y celda
+Repo -> MySQL: Consultar disponibilidad
+MySQL --> Repo: Vehiculo valido, celda disponible
+ES -> Repo: Guardar estancia y ocupar celda
+Repo -> MySQL: INSERT estancia / UPDATE celda
+MySQL --> Repo: Confirmacion
+Repo --> ES: Estancia guardada
+ES --> API: Estancia
+API --> UI: 201 Created
+
+== Iteracion 1: salida y pago por estancia ==
+Operario -> UI: Consultar liquidacion
+UI -> API: GET /api/estancias/{id}/liquidacion
+API -> ES: calcularLiquidacion(id)
+ES -> Repo: Consultar estancia
+Repo -> MySQL: SELECT estancia
+MySQL --> Repo: Entrada y tarifa
+ES --> UI: Valor calculado
+Operario -> UI: Confirmar metodo de pago
+UI -> API: POST /api/estancias/{id}/pago-salida
+API -> ES: confirmarPagoYRegistrarSalida(...)
+ES -> MySQL: Transaccion: INSERT pago, cerrar estancia, liberar celda
+MySQL --> ES: Commit
+ES --> API: Pago y salida
+API --> UI: 201 Created
+
+== Iteracion 2: consulta de celdas ==
+Operario -> UI: Consultar celdas disponibles
+UI -> API: GET /api/celdas/disponibles
+API -> Repo: Buscar celdas disponibles
+Repo -> MySQL: SELECT celdas por estado
+MySQL --> UI: Lista de celdas
+note over Operario,MySQL
+  El CRUD de usuarios esta en los requisitos,
+  pero aun no existe un controlador/flujo backend.
+  Los pagos usan usuarios previamente persistidos.
+end note
+
+== Iteracion 3: membresia ==
+Administrador -> UI: Inscribir usuario existente
+UI -> API: POST /api/mensualidades/membresias
+API -> MS: registrarMembresia(...)
+MS -> Repo: Bloquear usuario y validar vigencia
+Repo -> MySQL: SELECT usuario FOR UPDATE
+MySQL --> MS: Usuario y membresias
+MS -> Repo: Guardar membresia
+Repo -> MySQL: INSERT membresia
+MySQL --> API: Membresia guardada
+API --> UI: 201 Created (repetida: 200)
+
+== Iteracion 3: pago mensual idempotente ==
+Administrador -> UI: Registrar pago (usuario, periodo, valor, metodo)
+UI -> API: POST /api/mensualidades/pagos
+API -> MS: registrarPago(...)
+MS -> Repo: Bloquear usuario; buscar pago existente
+Repo -> MySQL: SELECT usuario FOR UPDATE
+Repo -> MySQL: SELECT pago por usuario y periodo
+alt Pago exacto ya existe
+  MySQL --> MS: Pago existente
+  MS --> API: Mismo pago
+  API --> UI: 200 OK, mismo ID
+else Solicitud distinta para la misma clave
+  MS --> API: Conflicto
+  API --> UI: 409 Conflict
+else No existe pago
+  MS -> Repo: Verificar membresia y guardar pago
+  Repo -> MySQL: SELECT membresia; INSERT pago
+  MySQL --> MS: Pago persistido
+  MS --> API: Pago creado
+  API --> UI: 201 Created
+end
+@enduml

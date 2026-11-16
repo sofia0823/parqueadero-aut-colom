@@ -1,0 +1,79 @@
+@startuml
+skinparam componentStyle rectangle
+
+package "Cliente" {
+  [Aplicacion React] as UI
+  [Pantallas: vehiculos, celdas, estancias, pagos mensuales] as Pages
+  UI --> Pages
+}
+
+package "Backend Spring Boot" {
+  package "Adaptadores web" {
+    [AuthController] as AuthAPI
+    [VehiculoController] as VehiculoAPI
+    [CeldaController] as CeldaAPI
+    [EstanciaController] as EstanciaAPI
+    [MensualidadController] as MensualidadAPI
+  }
+
+  package "Seguridad" {
+    [Spring Security\nsesion, roles y CSRF] as Security
+    [BootstrapPersonalAccounts] as AccountBootstrap
+  }
+
+  package "Aplicacion" {
+    [VehiculoService] as VehiculoService
+    [CeldaService] as CeldaService
+    [EstanciaService] as EstanciaService
+    [MensualidadService] as MensualidadService
+  }
+
+  package "Dominio y puertos" {
+    [Vehiculo / Usuario] as VehiculoDomain
+    [Celda] as CeldaDomain
+    [Estancia / Pago] as EstanciaDomain
+    [MembresiaMensual / PagoMensual] as MensualidadDomain
+    interface "Puertos de repositorio" as Ports
+  }
+
+  package "Persistencia" {
+    [Adaptadores JPA] as JpaAdapters
+    [Spring Data JPA] as SpringData
+    [CuentaPersonalRepository] as AccountRepository
+  }
+}
+
+database "MySQL 8" as DB
+
+UI --> VehiculoAPI : HTTP/JSON
+UI --> AuthAPI : Login, sesion, CSRF
+UI --> CeldaAPI : HTTP/JSON
+UI --> EstanciaAPI : HTTP/JSON
+UI --> MensualidadAPI : HTTP/JSON
+VehiculoAPI --> VehiculoService
+CeldaAPI --> CeldaService
+EstanciaAPI --> EstanciaService
+MensualidadAPI --> MensualidadService
+AuthAPI --> Security : Autenticar / cerrar sesion
+Security --> AccountRepository : Cargar cuenta y rol
+AccountBootstrap --> AccountRepository : Crear cuentas iniciales
+VehiculoService --> VehiculoDomain
+CeldaService --> CeldaDomain
+EstanciaService --> EstanciaDomain
+MensualidadService --> MensualidadDomain
+VehiculoService --> Ports
+CeldaService --> Ports
+EstanciaService --> Ports
+MensualidadService --> Ports
+Ports <|.. JpaAdapters
+JpaAdapters --> SpringData
+SpringData --> DB
+AccountRepository --> SpringData
+note right of Security
+  Cookie de sesion HttpOnly,
+  contrasenas BCrypt y proteccion CSRF.
+  Mensualidades y creacion de celdas:
+  solo ADMINISTRADOR.
+end note
+
+@enduml
