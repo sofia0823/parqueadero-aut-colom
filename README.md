@@ -67,9 +67,7 @@ El backend sirve el frontend compilado y la API desde el mismo despliegue. En de
 Pruebas automatizadas del backend: `cd backend` y `mvn test`. La suite (18 pruebas) incluye servicio/controlador y pruebas HTTP con H2 en memoria, además de la regla de cobro completo para una membresía vigente un solo día. El esquema y el backend también se validaron con MySQL 8.4 efímero, incluyendo login, roles, CSRF y cierre de sesión. Para probar manualmente contra el backend y MySQL locales, usar `docs/pruebas/mensualidades.http` en VS Code con una extensión cliente HTTP; primero inicia sesión como administrador y copia las cookies/token CSRF indicados en el archivo, luego reemplaza el ID y período por datos válidos. Los POST crean datos y no se deben ejecutar contra producción.
 
 ## Repositorio GitHub
-Repositorio indicado para el proyecto: https://github.com/sofia0823/Parqueadero-autoscolombia.
-
-Repositorio GitHub: https://github.com/sofia0823/parqueadero-aut-colom. El historial inicial remoto está en `v1.0` y contiene una plantilla de documentación ReadMe.com y archivos de modelo/datos. Al integrar el proyecto, conservar los archivos remotos no conflictivos y evitar `force push`. No subir contraseñas reales.
+https://github.com/sofia0823/parqueadero-aut-colom. El historial remoto inicial de la rama `v1.0` contiene una plantilla de documentación ReadMe.com y archivos de modelo/datos; conservar los archivos remotos que no entren en conflicto y evitar `force push`. No subir contraseñas reales.
 
 ## Entregables académicos
 - Requerimientos e historias: `docs/requerimientos.md` y `docs/historias_usuario.md`.
