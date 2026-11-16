@@ -67,7 +67,7 @@ El backend sirve el frontend compilado y la API desde el mismo despliegue. En de
 Pruebas automatizadas del backend: `cd backend` y `mvn test`. La suite (18 pruebas) incluye servicio/controlador y pruebas HTTP con H2 en memoria, además de la regla de cobro completo para una membresía vigente un solo día. El esquema y el backend también se validaron con MySQL 8.4 efímero, incluyendo login, roles, CSRF y cierre de sesión. Para probar manualmente contra el backend y MySQL locales, usar `docs/pruebas/mensualidades.http` en VS Code con una extensión cliente HTTP; primero inicia sesión como administrador y copia las cookies/token CSRF indicados en el archivo, luego reemplaza el ID y período por datos válidos. Los POST crean datos y no se deben ejecutar contra producción.
 
 ## Repositorio GitHub
-https://github.com/sofia0823/parqueadero-aut-colom. El proyecto está integrado localmente en la rama `v1.0`, que sigue a `origin/v1.0`, conservando los archivos remotos no conflictivos. El push quedó pendiente: GitHub rechazó la escritura para la cuenta actualmente autenticada. Se requiere iniciar sesión con una cuenta con acceso de escritura o pedir al propietario que conceda ese permiso. No compartir ni guardar tokens o contraseñas en el repositorio.
+https://github.com/sofia0823/parqueadero-aut-colom. El proyecto está publicado en la rama `v1.0`, que sigue a `origin/v1.0`. Se conservaron los archivos remotos no conflictivos y el historial; el README de la plantilla fue reemplazado por estas instrucciones del proyecto. Evitar `force push` y no compartir ni guardar tokens o contraseñas en el repositorio.
 
 ## Entregables académicos
 - Requerimientos e historias: `docs/requerimientos.md` y `docs/historias_usuario.md`.

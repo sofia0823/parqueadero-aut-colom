@@ -39,7 +39,7 @@ Avance actualizado: 2026-11-15.
 - [x] Verificar el repositorio proporcionado: es público, rama `v1.0`, pero contiene una plantilla ReadMe.com y algunos archivos de modelo/datos, no el código fuente del parqueadero.
 - [x] Inicializar Git en la carpeta local, configurar `origin` y descargar la referencia `origin/v1.0`.
 - [x] Integrar localmente ambas historias en `v1.0`, conservar los archivos remotos no conflictivos y configurar el seguimiento de `origin/v1.0`.
-- [ ] Publicar el código: GitHub rechazó el push porque la cuenta autenticada no tiene permiso de escritura.
+- [x] Publicar el código en `v1.0`; el push fue exitoso y la rama local quedó sincronizada.
 
 ## 5. Reglas de período y vencimiento
 
@@ -53,5 +53,5 @@ Avance actualizado: 2026-11-15.
 - No hay MySQL nativo disponible; el esquema y el backend, incluyendo autenticación/RBAC, se validaron con MySQL 8.4 en contenedores efímeros.
 - RBAC protege mensualidades y creación de celdas; otras rutas autenticadas no tienen una matriz granular por rol implementada.
 - En despliegue, exigir HTTPS y `SESSION_COOKIE_SECURE=true`; no se validó una instalación de producción.
-- El repositorio remoto ya tiene la historia local integrada en esta carpeta, pero el push no se completó por falta de permiso de escritura de la cuenta autenticada.
+- El README y las fuentes de plantilla originales fueron reemplazados en sus rutas conflictivas; el resto de archivos remotos se conservó.
 - RF-09 (novedades) aparece en requerimientos/diseño, pero no existe en el backend ni en el esquema desplegable; `docs/modelo_datos.sql` ahora lo deja explícito.
